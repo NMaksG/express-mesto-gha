@@ -1,14 +1,16 @@
 const express = require('express');
-// const path = require('path');
 const mongoose = require('mongoose');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
-app.use(express.json());
-// app.use('/users', require('./routes/user'));
+const userRouter = require('./routes/user');
+const cardRouter = require('./routes/card');
 
-const router = require('./routes/user');
+const NOT_FOUND = 404;
+const INTERNAL_SERVER_ERROR = 500;
+
+app.use(express.json());
 
 app.use((req, res, next) => {
   req.user = {
@@ -18,23 +20,24 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(router);
+app.use(userRouter);
+app.use(cardRouter);
 
-async function main() {
-  await mongoose.connect('mongodb://localhost:27017/mestodb', {
-    useNewUrlParser: true,
-    useUnifiedTopology: false,
-  });
-  await app.listen(PORT);
-  console.log(`Cервер запущен на ${PORT} порту`);
+app.use('*', (req, res) => {
+  res.status(NOT_FOUND).send({ message: 'Запрашиваемая страница не найдена' });
+});
+
+async function main(req, res) {
+  try {
+    await mongoose.connect('mongodb://localhost:27017/mestodb', {
+      useNewUrlParser: true,
+      useUnifiedTopology: false,
+    });
+    await app.listen(PORT);
+    console.log(`Cервер запущен на ${PORT} порту`);
+  } catch (err) {
+    res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
+  }
 }
 
 main();
-
-// app.get("/", (req, res) => {
-//   res.send("hello world");
-// });
-
-// app.listen(PORT, () => {
-//   console.log(`Сервер запущен на ${PORT} порту`);
-// });
