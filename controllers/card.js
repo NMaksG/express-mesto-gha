@@ -39,7 +39,7 @@ module.exports.deleteCard = async (req, res) => {
     return res.status(OK).send(card);
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      return res.status(BAD_REQUEST).send({ message: 'Невалидный Id карточки', ...err });
+      return res.status(BAD_REQUEST).send({ message: 'Ошибка в запросе', ...err });
     }
     return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
   }
@@ -60,7 +60,7 @@ module.exports.likeCard = async (req, res) => {
     return res.status(OK).send(card);
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      return res.status(BAD_REQUEST).send({ message: 'Невалидный Id карточки', ...err });
+      return res.status(BAD_REQUEST).send({ message: 'Ошибка в запросе', ...err });
     }
     return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
   }
@@ -81,7 +81,7 @@ module.exports.dislikeCard = async (req, res) => {
     return res.status(OK).send(card);
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      return res.status(BAD_REQUEST).send({ message: 'Невалидный Id карточки', ...err });
+      return res.status(BAD_REQUEST).send({ message: 'Ошибка в запросе', ...err });
     }
     return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
   }

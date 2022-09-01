@@ -38,7 +38,7 @@ module.exports.getUserId = async (req, res) => {
     return res.status(OK).send(user);
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      return res.status(BAD_REQUEST).send({ message: 'Невалидный Id пользователя', ...err });
+      return res.status(BAD_REQUEST).send({ message: 'Ошибка в запросе', ...err });
     }
     return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
   }
@@ -59,8 +59,8 @@ module.exports.updateUser = async (req, res) => {
     }
     return res.status(OK).send(user);
   } catch (err) {
-    if (err.kind === 'ObjectId') {
-      return res.status(BAD_REQUEST).send({ message: 'Невалидный Id пользователя', ...err });
+    if (err.name === 'ValidationError') {
+      return res.status(BAD_REQUEST).send({ message: 'Ошибка в запросе', ...err });
     }
     return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
   }
@@ -82,7 +82,7 @@ module.exports.updateAvatar = async (req, res) => {
     return res.status(OK).send(user);
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      return res.status(BAD_REQUEST).send({ message: 'Невалидный Id пользователя', ...err });
+      return res.status(BAD_REQUEST).send({ message: 'Ошибка в запросе', ...err });
     }
     return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
   }
