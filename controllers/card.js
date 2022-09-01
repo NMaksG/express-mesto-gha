@@ -12,7 +12,7 @@ module.exports.createCard = async (req, res) => {
     const card = await Card.create({ name, link, owner });
     return res.status(OK).send(card);
   } catch (err) {
-    if (err.errors.name.name === 'ValidatorError') {
+    if (err.name === 'ValidationError') {
       return res.status(BAD_REQUEST).send({ message: 'Ошибка в запросе', ...err });
     }
     return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });

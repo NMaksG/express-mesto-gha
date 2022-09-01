@@ -11,7 +11,7 @@ module.exports.createUser = async (req, res) => {
     const user = await User.create({ name, about, avatar });
     return res.status(OK).send(user);
   } catch (err) {
-    if (err.errors.name.name === 'ValidatorError') {
+    if (err.name === 'ValidationError') {
       return res.status(BAD_REQUEST).send({ message: 'Ошибка в запросе' });
     }
     return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
