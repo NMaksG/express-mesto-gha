@@ -1,27 +1,28 @@
 const User = require('../models/user');
 
-const OK = 200;
-const BAD_REQUEST = 400;
-const NOT_FOUND = 404;
-const INTERNAL_SERVER_ERROR = 500;
+const {
+  BAD_REQUEST,
+  NOT_FOUND,
+  INTERNAL_SERVER_ERROR,
+} = require('../errors');
 
 module.exports.createUser = async (req, res) => {
   const { name, about, avatar } = req.body;
   try {
     const user = await User.create({ name, about, avatar });
-    return res.status(OK).send(user);
+    return res.send(user);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      return res.status(BAD_REQUEST).send({ message: 'Ошибка в запросе' });
+      return res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
 module.exports.getUsers = async (req, res) => {
   try {
     const users = await User.find({});
-    return res.status(OK).send(users);
+    return res.send(users);
   } catch {
     return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
@@ -35,12 +36,12 @@ module.exports.getUserId = async (req, res) => {
         .status(NOT_FOUND)
         .send({ message: 'Запрашиваемый пользователь не найден' });
     }
-    return res.status(OK).send(user);
+    return res.send(user);
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      return res.status(BAD_REQUEST).send({ message: 'Ошибка в запросе', ...err });
+      return res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -57,12 +58,12 @@ module.exports.updateUser = async (req, res) => {
         .status(NOT_FOUND)
         .send({ message: 'Запрашиваемый пользователь не найден' });
     }
-    return res.status(OK).send(user);
+    return res.send(user);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      return res.status(BAD_REQUEST).send({ message: 'Ошибка в запросе', ...err });
+      return res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -79,11 +80,11 @@ module.exports.updateAvatar = async (req, res) => {
         .status(NOT_FOUND)
         .send({ message: 'Запрашиваемый пользователь не найден' });
     }
-    return res.status(OK).send(user);
+    return res.send(user);
   } catch (err) {
-    if (err.kind === 'ObjectId') {
-      return res.status(BAD_REQUEST).send({ message: 'Ошибка в запросе', ...err });
+    if (err.name === 'ValidationError') {
+      return res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере', ...err });
+    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
   }
 };
