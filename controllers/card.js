@@ -1,12 +1,10 @@
 const Card = require('../models/card');
+const InternalServerError = require('../errors/InternalServerError');
+const NotFoundError = require('../errors/NotFoundError');
+const BadRequestError = require('../errors/BadRequestError');
+const ForbiddenError = require('../errors/ForbiddenError');
 
-const {
-  BAD_REQUEST,
-  NOT_FOUND,
-  INTERNAL_SERVER_ERROR,
-} = require('../errors');
-
-module.exports.createCard = async (req, res) => {
+module.exports.createCard = async (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   try {
@@ -14,39 +12,41 @@ module.exports.createCard = async (req, res) => {
     return res.send(card);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      return res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
+      return next(new BadRequestError('Переданы некорректные данные'));
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
+    return next(new InternalServerError('Произошла ошибка на сервере'));
   }
 };
 
-module.exports.getCards = async (req, res) => {
+module.exports.getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({});
     return res.send(cards);
   } catch (err) {
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
+    return next(new InternalServerError('Произошла ошибка на сервере'));
   }
 };
 
-module.exports.deleteCard = async (req, res) => {
+module.exports.deleteCard = async (req, res, next) => {
   try {
-    const card = await Card.findByIdAndDelete(req.params.cardId);
+    const card = await Card.findById(req.params.cardId);
     if (!card) {
-      return res
-        .status(NOT_FOUND)
-        .send({ message: 'Запрашиваемая карточка не найдена' });
+      return next(new NotFoundError('Запрашиваемая карточка не найдена'));
     }
+    if (!card.owner.equals(req.user._id)) {
+      return next(new ForbiddenError('Нет прав на удаление'));
+    }
+    card.delete();
     return res.send(card);
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      return res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
+      return next(new BadRequestError('Переданы некорректные данные'));
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
+    return next(new InternalServerError('Произошла ошибка на сервере'));
   }
 };
 
-module.exports.likeCard = async (req, res) => {
+module.exports.likeCard = async (req, res, next) => {
   try {
     const card = await Card.findByIdAndUpdate(
       req.params.cardId,
@@ -54,20 +54,18 @@ module.exports.likeCard = async (req, res) => {
       { new: true, runValidators: true },
     );
     if (!card) {
-      return res
-        .status(NOT_FOUND)
-        .send({ message: 'Запрашиваемая карточка не найдена' });
+      return next(new NotFoundError('Запрашиваемая карточка не найдена'));
     }
     return res.send(card);
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      return res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
+      return next(new BadRequestError('Переданы некорректные данные'));
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
+    return next(new InternalServerError('Произошла ошибка на сервере'));
   }
 };
 
-module.exports.dislikeCard = async (req, res) => {
+module.exports.dislikeCard = async (req, res, next) => {
   try {
     const card = await Card.findByIdAndUpdate(
       req.params.cardId,
@@ -75,15 +73,13 @@ module.exports.dislikeCard = async (req, res) => {
       { new: true, runValidators: true },
     );
     if (!card) {
-      return res
-        .status(NOT_FOUND)
-        .send({ message: 'Запрашиваемая карточка не найдена' });
+      return next(new NotFoundError('Запрашиваемая карточка не найдена'));
     }
     return res.send(card);
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      return res.status(BAD_REQUEST).send({ message: 'Переданы некорректные данные' });
+      return next(new BadRequestError('Переданы некорректные данные'));
     }
-    return res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
+    return next(new InternalServerError('Произошла ошибка на сервере'));
   }
 };
