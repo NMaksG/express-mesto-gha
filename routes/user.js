@@ -6,9 +6,9 @@ const {
 
 userRouter.get('/users', getUsers);
 userRouter.get('/users/me', getUserMe);
-userRouter.get('/users/:userId', celebrate({
+userRouter.get('/users/:userID', celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().alphanum().length(24),
+    userID: Joi.string().alphanum().length(24),
   }),
 }), getUserId);
 userRouter.patch('/users/me', celebrate({
@@ -19,7 +19,8 @@ userRouter.patch('/users/me', celebrate({
 }), updateUser);
 userRouter.patch('/users/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string(),
+    avatar: Joi.string()
+      .regex(/https?:\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])/),
   }),
 }), updateAvatar);
 
