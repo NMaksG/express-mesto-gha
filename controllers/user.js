@@ -117,7 +117,8 @@ module.exports.login = async (req, res, next) => {
     if (!comparePassword) {
       return next(new UnauthorizedError('Неправильные почта или пароль'));
     }
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ _id: user._id }, 'SECRET');
+    // const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
     res.cookie('jwt', token, {
       maxAge: 3600000,
       httpOnly: true,
