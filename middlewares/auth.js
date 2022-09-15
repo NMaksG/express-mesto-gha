@@ -3,6 +3,9 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 
 module.exports.auth = (req, res, next) => {
   const token = req.cookies.jwt;
+  if (!token) {
+    return next(new UnauthorizedError('Неправильные почта или пароль'));
+  }
   let payload;
 
   try {

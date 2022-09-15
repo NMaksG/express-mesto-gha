@@ -1,15 +1,24 @@
+const { ObjectId } = require('mongoose').Types;
 const cardRouter = require('express').Router();
 const { Joi, celebrate } = require('celebrate');
 const {
   getCards, deleteCard, createCard, likeCard, dislikeCard,
 } = require('../controllers/card');
 
-cardRouter.get('/cards', getCards);
-cardRouter.delete('/cards/:cardId', celebrate({
+const celebrateCard = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().alphanum().length(24),
+    cardId: Joi.string().alphanum().length(24)
+      .custom((value, helper) => {
+        if (ObjectId.isValid(value)) {
+          return value;
+        }
+        return helper('Невалидные данные');
+      }),
   }),
-}), deleteCard);
+});
+
+cardRouter.get('/cards', getCards);
+cardRouter.delete('/cards/:cardId', celebrateCard, deleteCard);
 cardRouter.post('/cards', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
@@ -17,15 +26,7 @@ cardRouter.post('/cards', celebrate({
       .regex(/https?:\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])/),
   }),
 }), createCard);
-cardRouter.put('/cards/:cardId/likes', celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string().alphanum().length(24),
-  }),
-}), likeCard);
-cardRouter.delete('/cards/:cardId/likes', celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string().alphanum().length(24),
-  }),
-}), dislikeCard);
+cardRouter.put('/cards/:cardId/likes', celebrateCard, likeCard);
+cardRouter.delete('/cards/:cardId/likes', celebrateCard, dislikeCard);
 
 module.exports = cardRouter;

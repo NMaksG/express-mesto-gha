@@ -36,7 +36,7 @@ module.exports.deleteCard = async (req, res, next) => {
     if (!card.owner.equals(req.user._id)) {
       return next(new ForbiddenError('Нет прав на удаление'));
     }
-    card.delete();
+    await card.remove();
     return res.send(card);
   } catch (err) {
     if (err.kind === 'ObjectId') {

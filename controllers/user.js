@@ -127,6 +127,7 @@ module.exports.login = async (req, res, next) => {
       name: user.name, about: user.about, avatar: user.avatar, email,
     });
   } catch (err) {
-    return next(new InternalServerError('Произошла ошибка на сервере'));
+    // return next(new InternalServerError('Произошла ошибка на сервере'));
+    return next(err);
   }
 };
