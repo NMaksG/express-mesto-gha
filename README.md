@@ -1,28 +1,18 @@
 [![Tests](https://github.com/NMaksG/express-mesto-gha/actions/workflows/tests-13-sprint.yml/badge.svg)](https://github.com/NMaksG/express-mesto-gha/actions/workflows/tests-13-sprint.yml) [![Tests](https://github.com/NMaksG/express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/NMaksG/express-mesto-gha/actions/workflows/tests-14-sprint.yml)
-# Проект Mesto фронтенд + бэкенд
 
 
+# Учебный проект: Место - бэкенд проекта
 
-## Настройка бейджей статуса тестов
-Перед началом работы над проектом рекомендуется исправить бейджи, отражающие статус прохождения тестов.
-Для этого замените разметку бейджей на следующий фрагмент, подставив вместо `${имя_пользователя}` и `${имя_репозитория}` соответствующие значения.
+## *Описание*
+Одностраничный сайт(аналог популярной соцсети) на React с авторизацией и регистрацией пользователей, адаптивный для различных устройств, в котором пользователи могут делиться фотографиями. Демонстрирует навыки разработки бэкенда на Node.js, Express и MongoDB.
 
-```
-[![Tests for sprint 13](https://github.com/NMaksG/express-mesto-gha/actions/workflows/tests-13-sprint.yml/badge.svg)](https://github.com/NMaksG/express-mesto-gha/actions/workflows/tests-13-sprint.yml) 
+## *Используемые технологии*
+* Node.js
+* Express
+* MongoDB
 
-[![Tests for sprint 14](https://github.com/NMaksG/${имя репозитория}/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/NMaksG/${имя репозитория}/actions/workflows/tests-14-sprint.yml)
-```
-
-
-## Директории
-
-`/routes` — папка с файлами роутера  
-`/controllers` — папка с файлами контроллеров пользователя и карточки   
-`/models` — папка с файлами описания схем пользователя и карточки  
-  
-Остальные директории вспомогательные, создаются при необходимости разработчиком
-
-## Запуск проекта
-
-`npm run start` — запускает сервер   
-`npm run dev` — запускает сервер с hot-reload
+## *Установка и запуск проекта*
+Клонировать репозиторий: `git clone https://github.com/NMaksG/express-mesto-gha.git`   
+Установить зависимости: `npm install`   
+Запустить сервер: `npm run start`   
+Запустить сервер с hot-reload: `npm run dev`   
